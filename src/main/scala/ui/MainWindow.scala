@@ -21,7 +21,7 @@ import I18N.i18n._
  */
 object MainWindow extends SWTHelper
 {
-  Display.setAppName("IRCBalloon")
+  Display.setAppName("Twitchy")
 
   val display = new Display
   val shell = new Shell(display)
@@ -43,7 +43,7 @@ object MainWindow extends SWTHelper
   val connectButton = createConnectButton()
   val logTextArea = createLogTextArea()
 
-  lazy val actorSystem = ActorSystem("IRCBalloon")
+  lazy val actorSystem = ActorSystem("Twitchy")
   lazy val controller = actorSystem.actorOf(Props[ControllerActor])
 
   def createOptionMenu(optionHeader: MenuItem) =

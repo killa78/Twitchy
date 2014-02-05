@@ -19,7 +19,7 @@ class IRCBot(info: IRCInfo, controllerActor: ActorRef) extends PircBotX {
   object Handlers extends ListenerAdapter[IRCBot] {
 
     private def isBroadcaster(user: User): Boolean = {
-      info.hostname == s"${user.getNick}.jtvirc.com" &&
+      info.hostname == s"irc.twitch.tv" &&
       info.channel == s"#${user.getNick}"
     }
 

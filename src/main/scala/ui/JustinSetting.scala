@@ -18,13 +18,13 @@ class JustinSetting(parent: TabFolder, onModify: ModifyEvent => Any) extends
   val tabItem = new TabItem(parent, SWT.NONE)
   val gridLayout = new GridLayout(2,  false)
   val username = createText(this, tr("Username:"))
-  val password = createText(this, tr("Password:"), SWT.PASSWORD)
+  val password = createText(this, tr("oAuth Key:"), SWT.PASSWORD)
   val (onJoinButton, onLeaveButton) = createJoinLeaveButton(this)
 
   def getIRCInfo: IRCInfo = {
-    val hostname = "%s.jtvirc.com" format(username.getText)
+    val hostname = "irc.twitch.tv" format(username.getText)
     val password = Some(this.password.getText.trim)
-    val channel = "#%s" format(username.getText)
+    val channel = "#%s" format(username.getText.toLowerCase)
 
     IRCInfo(
       hostname, 6667, username.getText, channel, password, 

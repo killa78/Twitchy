@@ -4,9 +4,9 @@ scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
 
 seq(assemblySettings: _*)
 
-name := "IRCBalloon"
+name := "Twitchy"
 
-version := "0.8.0"
+version := "1.0.0"
 
 scalaVersion := "2.10.1"
 
