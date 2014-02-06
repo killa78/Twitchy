@@ -54,6 +54,7 @@ class IRCSetting(parent: TabFolder, onModify: ModifyEvent => Any) extends
 
   def setDefaultValue()
   {
+    hostText.setText("Non Twitch IRC is Not Yet Implemented(NYI)")
     portText.setText("6667")
   }
 
@@ -80,12 +81,12 @@ class IRCSetting(parent: TabFolder, onModify: ModifyEvent => Any) extends
     this.channel.setEnabled(isEnabled)
   }
 
-
+  this.setUIEnabled(false)
   this.setDefaultValue()
   this.setTextVerify()
   this.setModifyListener()
   this.setLayout(gridLayout)
   this.tabItem.setText("IRC")
-  this.tabItem.setControl(this)
+  this.tabItem.setControl(this)  
 }
 

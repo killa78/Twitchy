@@ -3,11 +3,13 @@ package org.bone.ircballoon
 import org.bone.ircballoon.model.IRCInfo
 
 import org.eclipse.swt.widgets.{List => SWTList, _}
+import org.eclipse.swt.widgets.Control
 import org.eclipse.swt.layout._
 import org.eclipse.swt.events._
 import org.eclipse.swt.graphics._
 import org.eclipse.swt.custom.StyledText
 import org.eclipse.swt.custom.StackLayout
+import org.eclipse.swt.program.Program
 
 import org.eclipse.swt._
 import I18N.i18n._
@@ -17,10 +19,12 @@ class JustinSetting(parent: TabFolder, onModify: ModifyEvent => Any) extends
 {
   val tabItem = new TabItem(parent, SWT.NONE)
   val gridLayout = new GridLayout(2,  false)
-  val username = createText(this, tr("Username:"))
-  val password = createText(this, tr("oAuth Key:"), SWT.PASSWORD)
+  val loginGroup = createGroup(this, tr("Twitch Login Settings"))
+  val username = createText(loginGroup, tr("Username:"))
+  val password = createText(loginGroup, tr("oAuth Key:"), SWT.PASSWORD)
+  val (link) = createUrlBar(this)
   val (onJoinButton, onLeaveButton) = createJoinLeaveButton(this)
-
+ 
   def getIRCInfo: IRCInfo = {
     val hostname = "irc.twitch.tv" format(username.getText)
     val password = Some(this.password.getText.trim)
@@ -50,11 +54,19 @@ class JustinSetting(parent: TabFolder, onModify: ModifyEvent => Any) extends
     this.username.setEnabled(isEnabled)
     this.password.setEnabled(isEnabled)
   }
-
+  
+  def setLinkListener()
+  {
+    link.addSelectionListener { e: SelectionEvent =>
+    Program.launch("http://twitchapps.com/tmi/")
+    }
+  }
 
   this.setLayout(gridLayout)
   this.setModifyListener()
-  this.tabItem.setText("Justin / Twitch")
+  this.setLinkListener()
+  this.tabItem.setText("Twitch")
   this.tabItem.setControl(this)
+  
 }
 

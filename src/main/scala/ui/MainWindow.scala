@@ -12,6 +12,7 @@ import org.eclipse.swt.graphics._
 import org.eclipse.swt.custom.StyledText
 import org.eclipse.swt.custom.StackLayout
 import org.eclipse.swt.custom.ScrolledComposite
+import org.eclipse.swt.program.Program
 
 import org.eclipse.swt._
 import I18N.i18n._
@@ -29,8 +30,9 @@ object MainWindow extends SWTHelper
   val menu = createMenu()
   val logginLabel = createLabel(tr("Login Method"))
   val logginTab = createTabFolder()
-  val ircSetting = new IRCSetting(logginTab, e => updateConnectButtonState())
   val justinSetting = new JustinSetting(logginTab, e => updateConnectButtonState())
+  val ircSetting = new IRCSetting(logginTab, e => updateConnectButtonState())
+  
 
   val displayLabel = createLabel(tr("Display Method"))
   val displayTab = createTabFolder(true)
@@ -38,8 +40,9 @@ object MainWindow extends SWTHelper
   val blockScroll = new ScrolledComposite(displayTab, SWT.V_SCROLL)
   val ballonScroll = new ScrolledComposite(displayTab, SWT.V_SCROLL)
 
-  val blockSetting = new BlockSetting(displayTab, blockScroll, e => updateConnectButtonState())
   val balloonSetting = new BalloonSetting(displayTab, ballonScroll, e => updateConnectButtonState())
+  val blockSetting = new BlockSetting(displayTab, blockScroll, e => updateConnectButtonState())
+  
   val connectButton = createConnectButton()
   val logTextArea = createLogTextArea()
 
@@ -81,17 +84,32 @@ object MainWindow extends SWTHelper
     voteMenu
   }
 
+  def createDonateMenu(donateHeader: MenuItem) = 
+  {
+    val donateMenu = new Menu(shell, SWT.DROP_DOWN)
+    val startDonateItem = new MenuItem(donateMenu, SWT.PUSH)
+
+    startDonateItem.setText(tr("Click to Donate!"))
+    startDonateItem.addSelectionListener { e: SelectionEvent =>
+     Program.launch("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XS2T7KRBMHPH8")
+    }
+
+    donateMenu
+  }
   def createMenu() =
   {
     val menuBar = new Menu(shell, SWT.BAR)
     val optionHeader = new MenuItem(menuBar, SWT.CASCADE)
     val voteHeader = new MenuItem(menuBar, SWT.CASCADE)
+    val donateHeader = new MenuItem(menuBar, SWT.CASCADE)
 
     optionHeader.setText(tr("&Preference"))
     voteHeader.setText(tr("&Vote"))
+    donateHeader.setText(tr("&Donate!"))
 
     optionHeader.setMenu(createOptionMenu(optionHeader))
     voteHeader.setMenu(createVoteMenu(voteHeader))
+    donateHeader.setMenu(createDonateMenu(donateHeader))
 
     shell.setMenuBar(menuBar)
     menuBar
@@ -160,8 +178,8 @@ object MainWindow extends SWTHelper
   def updateConnectButtonState()
   {
     val connectSettingOK = 
-      (logginTab.getSelectionIndex == 0 && ircSetting.isSettingOK) ||
-      (logginTab.getSelectionIndex == 1 && justinSetting.isSettingOK)
+      (logginTab.getSelectionIndex == 0 && justinSetting.isSettingOK) ||
+      (logginTab.getSelectionIndex == 1 && ircSetting.isSettingOK)
 
     val displayStettingOK = 
       (displayTab.getSelectionIndex == 0 && blockSetting.isSettingOK) ||
@@ -171,14 +189,14 @@ object MainWindow extends SWTHelper
   }
 
   def getIRCInfo = logginTab.getSelectionIndex match {
-    case 0 => ircSetting.getIRCInfo
-    case 1 => justinSetting.getIRCInfo
+    case 0 => justinSetting.getIRCInfo
+    case 1 => ircSetting.getIRCInfo
   }
 
   def createNotificationService() = {
     displayTab.getSelectionIndex match {
-      case 0 => blockSetting.createNotificationBlock
-      case 1 => balloonSetting.createBalloonController
+      case 0 => balloonSetting.createBalloonController
+      case 1 => blockSetting.createNotificationBlock
     }
   }
 
@@ -237,7 +255,7 @@ object MainWindow extends SWTHelper
   {
     logginTab.setEnabled(isEnabled)
     displayTab.setEnabled(isEnabled)
-    ircSetting.setUIEnabled(isEnabled)
+    // ircSetting.setUIEnabled(isEnabled)
     justinSetting.setUIEnabled(isEnabled)
     blockSetting.setUIEnabled(isEnabled)
     balloonSetting.setUIEnabled(isEnabled)
@@ -266,24 +284,24 @@ object MainWindow extends SWTHelper
     setLayout()
     setConnectButtonListener()
     setTrayIcon()
-
-    Preference.read(ircSetting)
+    
     Preference.read(justinSetting)
-    Preference.read(blockSetting)
+    Preference.read(ircSetting)
     Preference.read(balloonSetting)
+    Preference.read(blockSetting)
     Preference.readEmotes()
     Preference.readAvatars()
 
-    shell.setText(tr("IRC Notification"))
+    shell.setText(tr("Twitchy"))
     shell.setImage(MyIcon.appIcon)
 
     shell.pack()
     shell.addShellListener(new ShellAdapter() {
       override def shellClosed(e: ShellEvent) {
-        Preference.save(ircSetting)
         Preference.save(justinSetting)
-        Preference.save(blockSetting)
+        Preference.save(ircSetting)
         Preference.save(balloonSetting)
+        Preference.save(blockSetting)
         Preference.saveEmotes()
         Preference.saveAvatars()
       }

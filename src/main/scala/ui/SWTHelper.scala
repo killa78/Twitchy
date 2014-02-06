@@ -160,6 +160,21 @@ trait SWTHelper
     (label, spinner)
   }
 
+  def createUrlBar(parent: Composite) =
+  {
+    val composite = new Composite(parent, SWT.NONE)
+    val rowLayout = new RowLayout()
+    val layoutData = new GridData(SWT.FILL, SWT.NONE, true, false)
+    
+    layoutData.horizontalSpan = 2
+    composite.setLayout(rowLayout)
+    val link = new Link(composite, SWT.NONE);
+		val text = "<a href=\"http://twitchapps.com/tmi/\">Click here to get your oAuthToken</a>"
+		link.setText(text);
+    (link)
+   }
+    
+    
   def createJoinLeaveButton(parent: Composite) =
   {
     val composite = new Composite(parent, SWT.NONE)
