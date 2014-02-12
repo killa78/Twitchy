@@ -14,5 +14,5 @@ ChangeLog
 License
 ========
 
-IRCBalloon is released under GNU GPL v3.
+Twitchy is released under GNU GPL v3.
 
